@@ -33,6 +33,15 @@ namespace Booking_taskApi
             services.AddDbContext<InitialContext>(opts => {
                 opts.UseSqlServer(Configuration["ConnectionStrings:MyDB"]);
             });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "any",
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("*");
+                                  });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +55,14 @@ namespace Booking_taskApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            //app.Use(async (context, next) =>
+            //{
+            //    context.Response.Headers.Add("Access-Control-Allow-Origin", "*"); //AppendHeader("Access-Control-Allow-Origin", "*");
+            //    await next.Invoke();
+            //    // Do logging or other work that doesn't write to the Response.
+            //});
+            app.UseCors("any");
 
             app.UseAuthorization();
 
